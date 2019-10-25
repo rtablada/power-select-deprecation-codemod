@@ -19,6 +19,7 @@ power-select-deprecation-codemod <TRANSFORM NAME> path/of/files/ or/some**/*glob
 ## Transforms
 
 <!--TRANSFORMS_START-->
+* [camelcase-actions](transforms/camelcase-actions/README.md)
 <!--TRANSFORMS_END-->
 
 ## Contributing
