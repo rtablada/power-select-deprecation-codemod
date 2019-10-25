@@ -1,6 +1,6 @@
 {
   "name": "power-select-deprecation-codemod",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "scripts": {
     "lint": "eslint --cache .",
     "test": "codemod-cli test",
