@@ -1,4 +1,3 @@
-const { getOptions } = require('codemod-cli');
 const recast = require('ember-template-recast');
 const { builders: b } = recast;
 
@@ -11,11 +10,11 @@ const changeActions = {
   onclose: 'onClose',
 };
 
-function isPowerSelectNode(node) {
+function isPowerSelectMustache(node) {
   return node.path.type == 'PathExpression' && node.path.original == 'power-select';
 }
 
-function transformAttrs(node) {
+function transformMustache(node) {
   let pairs = node.hash.pairs.map(attr => {
     if (Object.keys(changeActions).includes(attr.key)) {
       return b.pair(changeActions[attr.key], attr.value, attr.loc);
@@ -30,25 +29,56 @@ function transformAttrs(node) {
     case 'MustacheStatement':
       return b.mustache(node.path, node.params, hash);
     case 'BlockStatement':
-      debugger;
       return b.block(node.path, node.params, hash, node.program);
   }
 }
 
-module.exports = function transformer(file, api) {
-  // const j = getParser(api);
-  const options = getOptions();
+function isPowerSelectAngleBracket(node) {
+  return node.tag === 'PowerSelect';
+}
 
+function transformAngleBracket(node) {
+  let attributes = node.attributes.map(attr => {
+    let actionName = attr.name.substr(1);
+    if (Object.keys(changeActions).includes(actionName)) {
+      return b.attr(`@${changeActions[actionName]}`, attr.value, attr.loc);
+    }
+
+    return attr;
+  });
+
+  return b.element(
+    {
+      name: node.tag,
+      selfClosing: node.selfClosing,
+    },
+    {
+      attrs: attributes,
+      modifiers: node.modifiers,
+      children: node.children,
+      comments: node.comments,
+      blockParams: node.blockParams,
+      loc: node.loc,
+    }
+  );
+}
+
+module.exports = function transformer(file) {
   let { code: toCamelCase } = recast.transform(file.source, () => {
     return {
       MustacheStatement(node) {
-        if (isPowerSelectNode(node)) {
-          return transformAttrs(node);
+        if (isPowerSelectMustache(node)) {
+          return transformMustache(node);
         }
       },
       BlockStatement(node) {
-        if (isPowerSelectNode(node)) {
-          return transformAttrs(node);
+        if (isPowerSelectMustache(node)) {
+          return transformMustache(node);
+        }
+      },
+      ElementNode(node) {
+        if (isPowerSelectAngleBracket(node)) {
+          return transformAngleBracket(node);
         }
       },
     };
