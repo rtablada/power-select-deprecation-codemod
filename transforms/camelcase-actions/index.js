@@ -11,7 +11,10 @@ const changeActions = {
 };
 
 function isPowerSelectMustache(node) {
-  return node.path.type == 'PathExpression' && node.path.original == 'power-select';
+  return (
+    node.path.type == 'PathExpression' &&
+    (node.path.original == 'power-select' || node.path.original == 'power-select-multiple')
+  );
 }
 
 function transformMustache(node) {
@@ -34,7 +37,7 @@ function transformMustache(node) {
 }
 
 function isPowerSelectAngleBracket(node) {
-  return node.tag === 'PowerSelect';
+  return node.tag === 'PowerSelect' || node.tag == 'PowerSelectMultiple';
 }
 
 function transformAngleBracket(node) {
