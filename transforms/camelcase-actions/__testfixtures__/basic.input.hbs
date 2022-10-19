@@ -1,10 +1,18 @@
 {{power-select onchange=(action "foo") onclose=(action this.bar) onopen=(action (mut this.manager))}}
+{{power-select-multiple onchange=(action "foo") onclose=(action this.bar) onopen=(action (mut this.manager))}}
 
 {{#power-select onchange=(action "foo") onclose=(action this.bar) onopen=(action (mut this.manager))}}
   {{some-other-component onchange=(action "foo")}}
 {{/power-select}}
+{{#power-select-multiple onchange=(action "foo") onclose=(action this.bar) onopen=(action (mut this.manager))}}
+  {{some-other-component onchange=(action "foo")}}
+{{/power-select-multiple}}
 
 <PowerSelect onchange={{this.someValue}} @onclose={{action this.bar}} @onopen={{action (mut this.manager)}} />
+<PowerSelectMultiple onchange={{this.someValue}} @onclose={{action this.bar}} @onopen={{action (mut this.manager)}} />
 <PowerSelect @onotherAction={{this.dontchange}} onchange={{this.someValue}} @onclose={{action this.bar}} @onopen={{action (mut this.manager)}}>
   <SomeOtherComponent @onchange={{action "foo"}} />
 </PowerSelect>
+<PowerSelectMultiple @onotherAction={{this.dontchange}} onchange={{this.someValue}} @onclose={{action this.bar}} @onopen={{action (mut this.manager)}}>
+  <SomeOtherComponent @onchange={{action "foo"}} />
+</PowerSelectMultiple>
